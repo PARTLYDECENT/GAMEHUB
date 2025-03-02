@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "public/FIREBASE1",  // Where the files will be after extraction
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "serveGameHub"  // Make sure this matches the function name
+      }
+    ]
+  }
+}

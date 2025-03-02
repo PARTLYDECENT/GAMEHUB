@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            background-color: #0a0a2a;
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: hidden;
+            padding: 1rem;
+        }
+
+        /* Animated Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, #0a0a2a 20%, #0a0a2a 80%, transparent 80%, transparent),
+                        radial-gradient(circle, transparent 20%, #0a0a2a 20%, #0a0a2a 80%, transparent 80%, transparent) 50px 50px,
+                        linear-gradient(#001144 2px, transparent 2px) 0 -1px,
+                        linear-gradient(90deg, #001144 2px, #0a0a2a 2px) -1px 0;
+            background-size: 100px 100px, 100px 100px, 50px 50px, 50px 50px;
+            animation: moveStars 100s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveStars {
+            from { background-position: 0 0, 100px 100px, 0 0, 0 0; }
+            to { background-position: -2000px 2000px, -1900px 1900px, -1000px 1000px, -500px 500px; }
+        }
+
+        /* Title and navigation */
+        .site-header {
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 4rem;
+            text-shadow: 0 0 15px #00ffff, 0 0 30px #ff00ff;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: pixelDissipate 3s infinite;
+        }
+
+        @keyframes pixelDissipate {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; text-shadow: 0 0 5px #00ffff, 0 0 10px #ff00ff; }
+            100% { opacity: 1; }
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .nav-btn.active {
+            background: rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+        }
+
+        /* Content sections */
+        .content-section {
+            width: 100%;
+            max-width: 1200px;
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Game Portal section */
+        .dropdown {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dropdown select {
+            padding: 0.8rem 1.5rem;
+            font-size: 1.2rem;
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300ffff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") no-repeat right 1rem center;
+            background-size: 12px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .dropdown select:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .game-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .game-frame {
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            margin: 1rem 0 2rem;
+            background: #000033;
+            overflow: hidden;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Info and Tutorial sections */
+        .section-title {
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .info-container, .tutorial-container {
+            background: rgba(0, 0, 40, 0.6);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+        }
+
+        .tutorial-step {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+
+        .tutorial-step:last-child {
+            border-bottom: none;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #ff00ff;
+        }
+
+        .tutorial-step p {
+            line-height: 1.6;
+        }
+
+        .highlight {
+            color: #ff00ff;
+            font-weight: bold;
+        }
+
+        .code-example {
+            background: rgba(0, 0, 20, 0.8);
+            padding: 1rem;
+            border-radius: 5px;
+            border-left: 3px solid #ff00ff;
+            font-family: monospace;
+            margin: 1rem 0;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 850px) {
+            h1 {
+                font-size: 3rem;
+            }
+            
+            .game-frame {
+                height: 450px;
+            }
+            
+            nav {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 550px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .game-frame {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    
+    <header class="site-header">
+        <h1>GAME HUB</h1>
+        <nav>
+            <button class="nav-btn active" data-section="portal">Game Portal</button>
+            <button class="nav-btn" data-section="info">Info</button>
+            <button class="nav-btn" data-section="tutorial">Tutorial</button>
+        </nav>
+    </header>
+
+    <!-- Game Portal Section -->
+    <section id="portal" class="content-section active">
+        <div class="dropdown">
+            <select id="gameSelector">
+                <option value="ordinary-recycling">Ordinary Recycling</option>
+                <option value="ordinary-mars-builder">ORDINARY DEFENSE</option>
+                <option value="game">ORDINARY TECHNOLOGY MARS</option>
+                <option value="game2">LEVEL 1</option>
+            </select>
+        </div>
+        
+        <div class="game-container">
+            <div class="game-frame">
+                <iframe id="gameIframe" src="ordinary-recycling/index.html"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Information Section -->
+    <section id="info" class="content-section">
+        <h2 class="section-title">INFORMATION</h2>
+        <div class="info-container">
+            <p>Welcome to the Game Hub! This portal hosts a collection of browser games that you can play directly in your browser.</p>
+            <p>Currently available games:</p>
+            <ul>
+                <li><strong>Ordinary Recycling</strong> - Practice your recycling skills lol</li>
+                <li><strong>FRACTAL FORTRESS</strong> - Help curve the developmetn of this game by submitting ideas to improve in this strategy game.</li>
+                <li><strong>ORDINARY TECHNOLOGY MARS</strong> -Mine the martian surface competing against some enemys</li>
+                <li><strong>DRONE RESCUE</strong> - My first fps game ever very basic and early beta</li>
+            </ul>
+            <p>All games are built using web technologies and run directly in your browser. No downloads or installations required!</p>
+            <p>We will be updating the website and developing most of these games also the console will be used for easter eggs and special functions.</p>
+        </div>
+    </section>
+
+   <!-- Tutorial Section -->
+<section id="tutorial" class="content-section">
+    <h2 class="section-title">TUTORIAL</h2>
+    <div class="tutorial-container">
+        <div class="tutorial-step">
+            <h3 class="step-title">Step 1: Understanding Recycling Categories</h3>
+            <p>Recycling is organized into several main categories. Most recycling programs accept materials that fall into these groups:</p>
+            <div class="code-example">
+                Recyclable Materials:
+                ├── Paper & Cardboard
+                │   ├── Newspapers
+                │   ├── Magazines
+                │   ├── Office paper
+                │   └── Cardboard boxes
+                ├── Plastic
+                │   ├── Bottles
+                │   ├── Containers
+                │   └── Jugs (check recycling numbers)
+                ├── Metal
+                │   ├── Aluminum cans
+                │   ├── Steel food cans
+                │   └── Clean aluminum foil
+                └── Glass
+                    ├── Bottles
+                    └── Jars
+            </div>
+        </div>
+        
+        <div class="tutorial-step">
+            <h3 class="step-title">Step 2: Setting Up Your Recycling System</h3>
+            <p>To make recycling easy at home:</p>
+            <ol>
+                <li>Create designated bins or containers for different materials</li>
+                <li>Place bins in convenient locations (kitchen, office, garage)</li>
+                <li>Label each bin clearly so everyone knows what goes where</li>
+                <li>Consider a small container for items that need special handling</li>
+            </ol>
+            <p>A simple home recycling setup might look like this:</p>
+            <div class="code-example">
+                /home/
+                ├── Kitchen
+                │   ├── Regular trash bin
+                │   ├── Mixed recycling bin
+                │   └── Compost container (optional)
+                ├── Office
+                │   └── Paper recycling bin
+                └── Garage/Utility Area
+                    └── Larger recycling bins for collection day
+            </div>
+        </div>
+        
+        <div class="tutorial-step">
+            <h3 class="step-title">Step 3: How to Prepare Recyclables</h3>
+            <p>For successful recycling:</p>
+            <ol>
+                <li>Clean items - Rinse food containers to remove residue</li>
+                <li>Empty containers completely</li>
+                <li>Remove non-recyclable parts (plastic caps from glass bottles, etc.)</li>
+                <li>Break down cardboard boxes to save space</li>
+                <li>Keep paper dry and separate from wet recyclables</li>
+            </ol>
+            <p>Follow these preparation steps to ensure your recyclables can be processed properly:</p>
+            <div class="code-example">
+                // How to prepare common recyclables
+                Plastic bottles:
+                  1. Empty completely
+                  2. Rinse clean
+                  3. Replace cap (most programs now accept caps)
+                
+                Cardboard boxes:
+                  1. Remove any packaging material
+                  2. Break down flat
+                  3. Keep dry
+                
+                Food cans:
+                  1. Rinse thoroughly
+                  2. Labels can usually stay on
+            </div>
+        </div>
+        
+        <div class="tutorial-step">
+            <h3 class="step-title">Step 4: Troubleshooting</h3>
+            <p>If you're unsure about recycling:</p>
+            <ul>
+                <li>Check packaging for recycling symbols and numbers</li>
+                <li>Visit your local waste management website for specific guidelines</li>
+                <li>"When in doubt, throw it out" - contamination can ruin entire batches of recycling</li>
+                <li>Find special collection options for electronics, batteries, and hazardous waste</li>
+            </ul>
+            <p>For difficult items, look for these special recycling options:</p>
+            <div class="code-example">
+                Hard-to-Recycle Items:
+                  - Electronics: Best Buy, Staples, or local e-waste events
+                  - Batteries: Hardware stores, battery stores, special collection
+                  - Light bulbs: Hardware stores, IKEA, specialty recyclers
+                  - Plastic bags: Grocery stores (front-of-store collection)
+                  - Styrofoam: Special drop-off locations (rare)
+                  
+                Remember: Check Earth911.com or your local waste management 
+                website for specific drop-off locations in your area.
+            </div>
+        </div>
+    </div>
+</section>
+
+    <script>
+        // Navigation between sections
+        const navButtons = document.querySelectorAll('.nav-btn');
+        const sections = document.querySelectorAll('.content-section');
+        
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show selected section
+                const sectionId = button.getAttribute('data-section');
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === sectionId) {
+                        section.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Game selection functionality
+        const gameSelector = document.getElementById('gameSelector');
+        const gameIframe = document.getElementById('gameIframe');
+        
+        gameSelector.addEventListener('change', () => {
+            const selectedGame = gameSelector.value;
+            gameIframe.src = `${selectedGame}/index.html`;
+        });
+    </script>
+</body>
+</html>
